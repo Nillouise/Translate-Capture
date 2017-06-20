@@ -29,6 +29,7 @@ protected:
 	afx_msg LRESULT OnSocket(WPARAM wParam, LPARAM lParam);
 public:
 	CString m_link;
+	afx_msg void OnBnClickedButton2();
 };
 
 

@@ -35,6 +35,7 @@ BEGIN_MESSAGE_MAP(CServer, CDialogEx)
 //ON_MESSAGE(WM_SOCKET, &CServer::OnSocket)
 //ON_REGISTERED_MESSAGE(WM_SOCKET, &CServer::OnSocket)
 ON_MESSAGE(WM_SOCKET, &CServer::OnSocket)
+ON_BN_CLICKED(IDC_BUTTON2, &CServer::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -176,4 +177,63 @@ afx_msg LRESULT CServer::OnSocket(WPARAM wParam, LPARAM lParam)
 
 
 	return 0;
+}
+
+CString getTime()
+{
+	long long t = time(NULL);
+	CString a;
+	a.Format(_T("%lld"), t);
+	return a;
+}
+
+CString getCapture(CDialogEx * pwin)
+{
+
+	CString filename;
+	filename = "ServerScreen\\";
+	filename += getTime();
+	filename += ".jpg";
+
+	CImage Img;
+	if (!Img.IsNull())Img.Destroy();
+	CDC *pDC;//屏幕DC
+	pDC = pwin->GetDesktopWindow()->GetDC();//获取当前整个屏幕DC
+	int BitPerPixel = pDC->GetDeviceCaps(BITSPIXEL);//获得颜色模式
+	int Width = pDC->GetDeviceCaps(HORZRES);//获得水平分辨率
+	int Height = pDC->GetDeviceCaps(VERTRES);//获得垂直分辨率
+	CDC memDC;//建立和屏幕兼容的内存DC
+	memDC.CreateCompatibleDC(pDC);
+	CBitmap memBitmap, *oldmemBitmap;//建立和屏幕兼容的bitmap
+	memBitmap.CreateCompatibleBitmap(pDC, Width, Height);
+	oldmemBitmap = memDC.SelectObject(&memBitmap);//将memBitmap选入内存DC
+	memDC.BitBlt(0, 0, Width, Height, pDC, 0, 0, SRCCOPY);//复制屏幕图像到内存DC
+	//以下代码保存memDC中的位图到文件
+
+	Img.Attach((HBITMAP)memBitmap.GetSafeHandle());
+	Img.Save(filename);
+	Img.Detach();
+	pDC->DeleteDC();
+	memBitmap.DeleteObject();
+	memDC.DeleteDC();
+	pwin->ReleaseDC(pDC);
+	Img.Destroy();
+
+	return filename;
+}
+
+void CServer::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+	CString str = getCapture(this);
+	CImage img;
+	img.Load(str);
+	CDC *pdc;
+	CWnd *pw = GetDlgItem(IDC_STATIC);
+	pdc = pw->GetDC();
+	pdc->SetStretchBltMode(COLORONCOLOR);
+	CRect rect;
+	this->GetClientRect(rect);
+	img.Draw(pdc->m_hDC, 0, 0, rect.Width(), rect.Height());
+//	img.Destroy();
 }
