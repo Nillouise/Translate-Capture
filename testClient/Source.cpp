@@ -8,7 +8,7 @@
 #define SERVERPORT  6666
 using namespace std;
 
-class TCPSendFile
+class testTCPSendFile
 {
 public:
 	int ret;
@@ -16,7 +16,7 @@ public:
 	WSADATA data;
 	SOCKET sockClient;
 
-	TCPSendFile() {
+	testTCPSendFile() {
 		memset(sendBuf, 0, sizeof(sendBuf));
 		memset(recvBuf, 0, sizeof(recvBuf));
 
@@ -108,7 +108,7 @@ public:
 		return 0;
 	}
 
-	~TCPSendFile()
+	~testTCPSendFile()
 	{
 		closesocket(sockClient);
 		WSACleanup();
@@ -118,15 +118,18 @@ public:
 
 int main(void)
 {
-	TCPSendFile tcp;
+	testTCPSendFile tcp;
 	tcp.init();
 	//	tcp.sendFile("C:\\Users\\win7x64\\Documents\\visual studio 2015\\Projects\\FileClient\\Debug\\fsdf.docx");
 	string filename;
 	cout << "输入要传输的文件名，可以是绝对路径，也可以是同一文件夹内的文件： ";
 	cin >> filename;
-
+	char recvBuf[500];
+	memset(recvBuf, 0, sizeof(recvBuf));
+//	recv(tcp.sockClient, recvBuf, sizeof(recvBuf), 0);
+	cout << recvBuf;
 	tcp.sendFile(filename);
-	tcp.~TCPSendFile();
+	tcp.~testTCPSendFile();
 	getchar();
 	return 0;
 }

@@ -409,6 +409,13 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	m_wndOutput.UpdateFonts();
 }
 
+UINT ThreadServer(PVOID pv)
+{
+	CServer dlg;
+	dlg.DoModal();
+
+	return 0;
+}
 
 void CMainFrame::OnTranslateServer()
 {
@@ -417,10 +424,16 @@ void CMainFrame::OnTranslateServer()
 	CServer *dlg = new CServer;
 	dlg->Create(IDD_server, this);
 	dlg->ShowWindow(SW_SHOW);
-
+//	CWinThread* m_MFCThreadWnd = AfxBeginThread((AFX_THREADPROC)ThreadServer, this);
 }
 
+UINT ThreadClient(PVOID pv)
+{
+	CClient dlg;
+	dlg.DoModal();
 
+	return 0;
+}
 void CMainFrame::OnTranslateClient()
 {
 	// TODO: Add your command handler code here
@@ -428,5 +441,5 @@ void CMainFrame::OnTranslateClient()
 	CClient *dlg = new CClient;
 	dlg->Create(IDD_client, this);
 	dlg->ShowWindow(SW_SHOW);
-
+//	CWinThread* m_MFCThreadWnd = AfxBeginThread((AFX_THREADPROC)ThreadClient, this);
 }

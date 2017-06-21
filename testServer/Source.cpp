@@ -8,7 +8,7 @@
 #include<iostream>
 using namespace std;
 
-class TCPReceiveFile
+class testTCPReceiveFile
 {
 public:
 	int ret;
@@ -16,7 +16,7 @@ public:
 	WSADATA data;
 	SOCKET sockListen, sockTongxun;
 	int len;
-	TCPReceiveFile()
+	testTCPReceiveFile()
 	{
 		memset(sendBuf, 0, sizeof(sendBuf));
 		memset(recvBuf, 0, sizeof(recvBuf));
@@ -113,7 +113,7 @@ public:
 		cout << "接受成功" << endl;
 		return 0;
 	}
-	~TCPReceiveFile()
+	~testTCPReceiveFile()
 	{
 		closesocket(sockListen);
 		closesocket(sockTongxun);
@@ -126,7 +126,7 @@ public:
 int main(void)
 {
 
-	TCPReceiveFile tcp;
+	testTCPReceiveFile tcp;
 	tcp.init();
 	tcp.run();
 

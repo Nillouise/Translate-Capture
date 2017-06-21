@@ -145,6 +145,7 @@ CString getCapture(CDialogEx * pwin)
 {
 
 	CString filename;
+	CString pathname;
 	filename = "ServerScreen\\";
 	filename += getTime();
 	filename += ".jpg";
@@ -165,7 +166,7 @@ CString getCapture(CDialogEx * pwin)
 	//以下代码保存memDC中的位图到文件
 
 	Img.Attach((HBITMAP)memBitmap.GetSafeHandle());
-	Img.Save(filename);
+	Img.Save(pathname+filename);
 	Img.Detach();
 	pDC->DeleteDC();
 	memBitmap.DeleteObject();
@@ -198,14 +199,17 @@ afx_msg LRESULT CServer::OnSocket(WPARAM wParam, LPARAM lParam)
 			m_link += "客户端IP：";
 			m_link += inet_ntoa(addr.sin_addr);
 			UpdateData(false);
+//			string s = "fsdfsdfsdfdsdf\n";
+//			send(socket_client, s.c_str(), s.length(), 0);
 
+			
 			TCPSendFile tcpsend;
 			tcpsend.sockClient = socket_client;
 			CT2CA pszConvertedAnsiString(getCapture(this));
 			string ss(pszConvertedAnsiString);
 			tcpsend.sendFile(ss);
 			closesocket(socket_client);
-			WSACleanup();
+
 
 			break;
 		}

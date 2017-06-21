@@ -23,4 +23,5 @@ protected:
 public:
 	afx_msg void OnBnClickedButton1();
 	DWORD m_ip;
+	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
 };

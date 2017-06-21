@@ -3,6 +3,10 @@
 using namespace std;
 
 
+TCPSendFile::TCPSendFile()
+{
+}
+
 int TCPSendFile::init()
 {
 	ret = WSAStartup(MAKEWORD(2, 2), &data);
@@ -92,5 +96,4 @@ int TCPSendFile::sendFile(string filename)
 
 TCPSendFile::~TCPSendFile()
 {
-
 }
