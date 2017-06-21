@@ -5,6 +5,7 @@
 #include "Translate Capture.h"
 #include "Server.h"
 #include "afxdialogex.h"
+#include"TCPSendFile.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 // CServer dialog
@@ -132,53 +133,6 @@ void CServer::OnBnClickedButton1()
 //	return 0;
 //}
 
-
-afx_msg LRESULT CServer::OnSocket(WPARAM wParam, LPARAM lParam)
-{
-	UpdateData(TRUE);
-	int J = 0;
-	SOCKET socket_client;
-	switch (lParam)//消息值
-	{
-	case FD_ACCEPT:
-	{
-		SOCKADDR_IN addr;
-
-		int len = sizeof(SOCKADDR_IN);
-		socket_client = accept(socket_server, (sockaddr *)&addr, &len);
-		if (socket_client == INVALID_SOCKET)
-		{
-			MessageBox(_T("客户端套接字创建出错"));
-			return -1;
-		}
-		else {
-			//获取对方ip
-			m_link += "客户端IP：";
-			m_link += inet_ntoa(addr.sin_addr);
-			UpdateData(false);
-			break;
-		}
-	}
-
-
-	case FD_CLOSE:
-		/*
-		for(int i=0;i<5;i++){
-		if(socket_client[i]==(SOCKET)wParam){
-		J=i;
-		i=5;
-		}
-		}
-		closesocket(socket_client[J]);
-		ClientNum--;*/
-		break;
-	}
-
-
-
-	return 0;
-}
-
 CString getTime()
 {
 	long long t = time(NULL);
@@ -221,6 +175,62 @@ CString getCapture(CDialogEx * pwin)
 
 	return filename;
 }
+afx_msg LRESULT CServer::OnSocket(WPARAM wParam, LPARAM lParam)
+{
+	UpdateData(TRUE);
+	int J = 0;
+	SOCKET socket_client;
+	switch (lParam)//消息值
+	{
+	case FD_ACCEPT:
+	{
+		SOCKADDR_IN addr;
+
+		int len = sizeof(SOCKADDR_IN);
+		socket_client = accept(socket_server, (sockaddr *)&addr, &len);
+		if (socket_client == INVALID_SOCKET)
+		{
+			MessageBox(_T("客户端套接字创建出错"));
+			return -1;
+		}
+		else {
+			//获取对方ip
+			m_link += "客户端IP：";
+			m_link += inet_ntoa(addr.sin_addr);
+			UpdateData(false);
+
+			TCPSendFile tcpsend;
+			tcpsend.sockClient = socket_client;
+			CT2CA pszConvertedAnsiString(getCapture(this));
+			string ss(pszConvertedAnsiString);
+			tcpsend.sendFile(ss);
+			closesocket(socket_client);
+			WSACleanup();
+
+			break;
+		}
+	}
+
+
+	case FD_CLOSE:
+		/*
+		for(int i=0;i<5;i++){
+		if(socket_client[i]==(SOCKET)wParam){
+		J=i;
+		i=5;
+		}
+		}
+		closesocket(socket_client[J]);
+		ClientNum--;*/
+		break;
+	}
+
+
+
+	return 0;
+}
+
+
 
 void CServer::OnBnClickedButton2()
 {
