@@ -78,10 +78,13 @@ CString receivefile(SOCKET socket)
 			return CString();
 		}
 	}
+	long long total = 0;
 	while (true)
 	{
 		ret = recv(socket, recvBuf, sizeof(recvBuf), 0);
-		if (ret == SOCKET_ERROR || ret == 0)
+		total += ret;
+		if (ret == SOCKET_ERROR  || ret == 0)
+//		if (ret == SOCKET_ERROR)
 		{
 			file.close();
 			break;
