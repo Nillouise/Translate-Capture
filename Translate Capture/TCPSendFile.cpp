@@ -44,21 +44,14 @@ int TCPSendFile::sendFile(string filename)
 		}
 		ret = send(sockClient, sendBuf, curread, 0);
 		haveSend += curread;
-		int err;
 		if (SOCKET_ERROR == ret)
 		{
 			printf("send 错误");
-			err = WSAGetLastError();
-			if (err == 10035)//处理发送窗口塞满的情况
+			while(SOCKET_ERROR == ret && WSAGetLastError() == 10035)//处理发送窗口塞满的情况
 			{
-				WSAEVENT NewEvent;
-				NewEvent = WSACreateEvent();
-				while (WSAEventSelect(sockClient, NewEvent, FD_WRITE)!=0)
-				{
-				}
+				Sleep(3);
 				ret = send(sockClient, sendBuf, curread, 0);
 			}
-			return -5;
 		}
 		//打印进度
 		if ((int)(double(haveSend) / size * 100.0) > proceed)
