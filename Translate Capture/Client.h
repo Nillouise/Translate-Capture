@@ -26,5 +26,10 @@ public:
 	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnStnClickedImg();
 	void drawpic(CString filename);
+	CString findpic(int num);
+	int getpicNum(CString filename);
 
+
+	afx_msg void OnDeltaposSpin1(NMHDR *pNMHDR, LRESULT *pResult);
+	int frameNum;
 };

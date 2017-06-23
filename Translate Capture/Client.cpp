@@ -18,6 +18,7 @@ IMPLEMENT_DYNAMIC(CClient, CDialogEx)
 CClient::CClient(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_client, pParent)
 	, m_ip(3232242839)
+	, frameNum(0)
 {
 
 }
@@ -30,6 +31,7 @@ void CClient::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_IPAddress(pDX, IDC_IPADDRESS1, m_ip);
+	DDX_Text(pDX, IDC_EDIT1, frameNum);
 }
 
 
@@ -37,6 +39,7 @@ BEGIN_MESSAGE_MAP(CClient, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CClient::OnBnClickedButton1)
 	ON_NOTIFY(IPN_FIELDCHANGED, IDC_IPADDRESS1, &CClient::OnIpnFieldchangedIpaddress1)
 	ON_STN_CLICKED(IDC_IMG, &CClient::OnStnClickedImg)
+	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN1, &CClient::OnDeltaposSpin1)
 END_MESSAGE_MAP()
 
 
@@ -135,7 +138,8 @@ void CClient::OnBnClickedButton1()
 	
 	CString filename = receivefile(socket_client);
 	drawpic(filename);
-
+	frameNum = getpicNum(filename);
+	UpdateData(FALSE);
 }
 
 
@@ -159,6 +163,8 @@ void CClient::OnStnClickedImg()
 
 void CClient::drawpic(CString filename)
 {
+	if (filename == "")return;
+
 	CString pathname;
 	pathname = "ClientScreen\\";
 	CImage Img;
@@ -172,4 +178,74 @@ void CClient::drawpic(CString filename)
 	int wh = rect1.Height();
 	int ww = rect1.Width();
 	Img.Draw(pdc->m_hDC, 0, 0, ww, wh);
+}
+
+CString CClient::findpic(int num)
+{
+	CFileFind finder;
+	BOOL bWorking = finder.FindFile(_T("ClientScreen\\*.*"));
+	int cnum = 0;
+	while (bWorking)
+	{
+
+		bWorking = finder.FindNextFile();
+		if (finder.IsDirectory() || finder.IsDots())continue;
+		cnum++;
+		if (bWorking == true && cnum == num)
+		{
+			CString r =  finder.GetFileName();
+			finder.Close();
+			return r;
+		}
+	}
+	finder.Close();
+
+	return CString();
+}
+
+int CClient::getpicNum(CString filename)
+{
+
+	CFileFind finder;
+	BOOL bWorking = finder.FindFile(_T("ClientScreen\\*.*"));
+	int num=0;
+	while (bWorking)
+	{
+
+		bWorking = finder.FindNextFile();
+		if (finder.IsDirectory() || finder.IsDots())continue;
+		num++;
+		if (filename == finder.GetFileName())
+		{
+			finder.Close();
+			return num;
+		}
+	}
+	finder.Close();
+
+	return -1;
+}
+
+
+void CClient::OnDeltaposSpin1(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMUPDOWN pNMUpDown = reinterpret_cast<LPNMUPDOWN>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	UpdateData(true);
+	if (pNMUpDown->iDelta == -1) // 如果此值为-1 , 说明点击了Spin的往下的箭头  
+	{
+		frameNum++;
+	}
+	else if (pNMUpDown->iDelta == 1) // 如果此值为1, 说明点击了Spin的往上的箭头  
+	{
+		frameNum--;
+	}
+	UpdateData(false);
+
+	drawpic(findpic(frameNum));
+
+
+	*pResult = 0;
+
+
 }
