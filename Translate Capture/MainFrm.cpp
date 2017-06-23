@@ -423,6 +423,7 @@ void CMainFrame::OnTranslateServer()
 
 	CServer *dlg = new CServer;
 	dlg->Create(IDD_server, this);
+//	dlg->Create(IDD_server, NULL);
 	dlg->ShowWindow(SW_SHOW);
 //	CWinThread* m_MFCThreadWnd = AfxBeginThread((AFX_THREADPROC)ThreadServer, this);
 }
@@ -440,6 +441,7 @@ void CMainFrame::OnTranslateClient()
 
 	CClient *dlg = new CClient;
 	dlg->Create(IDD_client, this);
+//	dlg->Create(IDD_client, NULL);
 	dlg->ShowWindow(SW_SHOW);
 //	CWinThread* m_MFCThreadWnd = AfxBeginThread((AFX_THREADPROC)ThreadClient, this);
 }

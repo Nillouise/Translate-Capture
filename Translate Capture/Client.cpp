@@ -36,6 +36,7 @@ void CClient::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CClient, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CClient::OnBnClickedButton1)
 	ON_NOTIFY(IPN_FIELDCHANGED, IDC_IPADDRESS1, &CClient::OnIpnFieldchangedIpaddress1)
+	ON_STN_CLICKED(IDC_IMG, &CClient::OnStnClickedImg)
 END_MESSAGE_MAP()
 
 
@@ -133,7 +134,7 @@ void CClient::OnBnClickedButton1()
 	}
 	
 	CString filename = receivefile(socket_client);
-
+	drawpic(filename);
 
 }
 
@@ -146,4 +147,29 @@ void CClient::OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult)
 	LPNMIPADDRESS pIPAddr = reinterpret_cast<LPNMIPADDRESS>(pNMHDR);
 	// TODO: Add your control notification handler code here
 	*pResult = 0;
+}
+
+
+void CClient::OnStnClickedImg()
+{
+	// TODO: Add your control notification handler code here
+
+
+}
+
+void CClient::drawpic(CString filename)
+{
+	CString pathname;
+	pathname = "ClientScreen\\";
+	CImage Img;
+	Img.Load(pathname + filename);
+	CDC *pdc;
+	CWnd* pw = this->GetDlgItem(IDC_IMG);
+	pdc = pw->GetDC();
+	pdc->SetStretchBltMode(COLORONCOLOR);
+	CRect rect1;
+	pw->GetClientRect(rect1);
+	int wh = rect1.Height();
+	int ww = rect1.Width();
+	Img.Draw(pdc->m_hDC, 0, 0, ww, wh);
 }

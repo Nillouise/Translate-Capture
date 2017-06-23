@@ -1,6 +1,6 @@
 #pragma once
 #include"Server.h"
-
+#include<string>
 // CClient dialog
 
 class CClient : public CDialogEx
@@ -24,4 +24,7 @@ public:
 	afx_msg void OnBnClickedButton1();
 	DWORD m_ip;
 	afx_msg void OnIpnFieldchangedIpaddress1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnStnClickedImg();
+	void drawpic(CString filename);
+
 };
