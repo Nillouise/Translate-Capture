@@ -31,4 +31,6 @@ public:
 
 	afx_msg void OnDeltaposSpin1(NMHDR *pNMHDR, LRESULT *pResult);
 	int frameNum;
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

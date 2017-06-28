@@ -40,6 +40,8 @@ BEGIN_MESSAGE_MAP(CClient, CDialogEx)
 	ON_NOTIFY(IPN_FIELDCHANGED, IDC_IPADDRESS1, &CClient::OnIpnFieldchangedIpaddress1)
 	ON_STN_CLICKED(IDC_IMG, &CClient::OnStnClickedImg)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN1, &CClient::OnDeltaposSpin1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CClient::OnBnClickedButton2)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -248,4 +250,35 @@ void CClient::OnDeltaposSpin1(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 
 
+}
+int timerid = 32132;
+static int startcapture = 0;
+void CClient::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+	startcapture = !startcapture;
+
+	if (startcapture)
+	{
+		SetTimer(timerid, 500, 0);
+	}
+	else {
+		KillTimer(timerid);
+	}
+
+
+
+}
+
+
+void CClient::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	if (nIDEvent == timerid)
+	{
+		OnBnClickedButton1();
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
 }
