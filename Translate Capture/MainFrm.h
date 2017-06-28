@@ -59,6 +59,9 @@ protected:
 public:
 	afx_msg void OnTranslateServer();
 	afx_msg void OnTranslateClient();
+	UINT ThreadFunc(PVOID pv);
+
+
 };
 
 

@@ -29,7 +29,6 @@ public:
 	CString findpic(int num);
 	int getpicNum(CString filename);
 
-
 	afx_msg void OnDeltaposSpin1(NMHDR *pNMHDR, LRESULT *pResult);
 	int frameNum;
 };

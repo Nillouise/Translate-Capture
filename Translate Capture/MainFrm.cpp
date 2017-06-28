@@ -435,13 +435,47 @@ UINT ThreadClient(PVOID pv)
 
 	return 0;
 }
+
+UINT ThreadFunc2(PVOID pv);
 void CMainFrame::OnTranslateClient()
 {
 	// TODO: Add your command handler code here
+	 AfxBeginThread((AFX_THREADPROC)ThreadFunc2, this);
 
-	CClient *dlg = new CClient;
-	dlg->Create(IDD_client, this);
-//	dlg->Create(IDD_client, NULL);
-	dlg->ShowWindow(SW_SHOW);
+
+
+//	CClient *dlg = new CClient;
+//	dlg->Create(IDD_client, this);
+////	dlg->Create(IDD_client, NULL);
+//	dlg->ShowWindow(SW_SHOW);
 //	CWinThread* m_MFCThreadWnd = AfxBeginThread((AFX_THREADPROC)ThreadClient, this);
+}
+
+UINT ThreadFunc2(PVOID pv)
+{
+
+	CMainFrame *Testdlg = (CMainFrame*)pv;
+	CClient *dlg = new CClient;
+	dlg->Create(IDD_client);
+	//Testdlg->m_MFCThreadHwnd = dlg->m_hWnd;
+	//Testdlg->dlg = dlg;
+	dlg->ShowWindow(SW_SHOW);
+
+	//The message loop    
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+
+
+	dlg->DestroyWindow();
+	delete dlg;
+//	Testdlg->dlg = NULL;
+	TRACE(_T("ÊÍ·Å¶Ô»°¿ò"));
+	return 0;
+
+	return 0;
 }
